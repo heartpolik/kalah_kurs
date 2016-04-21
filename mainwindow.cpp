@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QString>
 #include <QVBoxLayout>
-#include <time.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -90,9 +89,7 @@ void MainWindow::_init_game()
 void MainWindow::_update_btns()
 {
     ui->a1->setText(QString::number(mVector[0].count));
-    Delay(50);
     ui->a2->setText(QString::number(mVector[1].count));
-    Delay(50);
     ui->a3->setText(QString::number(mVector[2].count));
     ui->a4->setText(QString::number(mVector[3].count));
     ui->a5->setText(QString::number(mVector[4].count));
