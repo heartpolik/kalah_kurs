@@ -49,6 +49,8 @@ private slots:
 
     void on_b6_clicked();
 
+    void on_actionExit_triggered();
+
 private:
     void _init_game();
     void _update_btns();

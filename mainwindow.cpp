@@ -146,6 +146,10 @@ void MainWindow::_btn_processing(int aSkip, int aIDBtn)
         ++i;
         --tmp;
     }
+    if(mVector[aIDBtn+i].count=1)
+    {
+
+    }
 
     _update_btns();
 }
@@ -187,10 +191,6 @@ void MainWindow::on_actionNew_game_with_human_triggered()
     _update_btns();
 }
 
-
-
-
-
 void MainWindow::on_b1_clicked()
 {
     _btn_processing(6, 7);
@@ -219,4 +219,9 @@ void MainWindow::on_b5_clicked()
 void MainWindow::on_b6_clicked()
 {
     _btn_processing(6, 12);
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    exit(0);
 }
