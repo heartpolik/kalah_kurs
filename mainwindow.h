@@ -12,6 +12,8 @@ struct sData
 {
     int idBtn;
     int count;
+    char player;
+    bool isDisabled;
 };
 
 class MainWindow : public QMainWindow
@@ -55,7 +57,11 @@ private:
     void _init_game();
     void _update_btns();
 
-    void _btn_processing(int aCount, int aIDBtn);
+    void _btn_processing(int aIDBtn);
+
+    char _switchTurn(int pButtonId);
+
+    void _setTurn(char player);
 
 private:
     Ui::MainWindow *ui;
