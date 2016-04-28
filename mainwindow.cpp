@@ -18,7 +18,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::_init_game()
+void
+    MainWindow::_init_game()
 {
     mVector.resize(14); // count btns
 
@@ -52,6 +53,7 @@ void MainWindow::_init_game()
     mVector[5] = tmp;
 
     // btn ak
+    tmp.player='A';
     tmp.idBtn = 7;
     tmp.count = 0;
     mVector[6] = tmp;
@@ -83,9 +85,12 @@ void MainWindow::_init_game()
     mVector[12] = tmp;
 
     // btn bk
+    tmp.player='B';
     tmp.count = 0;
     tmp.idBtn = 14;
     mVector[13] = tmp;
+
+    ui->label->setText("Start new game!");
 }
 
 void
@@ -123,19 +128,6 @@ void
     ui->b5->setDisabled(mVector[11].isDisabled);
     ui->b6->setDisabled(mVector[12].isDisabled);
 
-//    ui->a1->setDisabled(mVector[0].count == 0);
-//    ui->a2->setDisabled(mVector[1].count == 0);
-//    ui->a3->setDisabled(mVector[2].count == 0);
-//    ui->a4->setDisabled(mVector[3].count == 0);
-//    ui->a5->setDisabled(mVector[4].count == 0);
-//    ui->a6->setDisabled(mVector[5].count == 0);
-
-//    ui->b1->setDisabled(mVector[7].count == 0);
-//    ui->b2->setDisabled(mVector[8].count == 0);
-//    ui->b3->setDisabled(mVector[9].count == 0);
-//    ui->b4->setDisabled(mVector[10].count == 0);
-//    ui->b5->setDisabled(mVector[11].count == 0);
-//    ui->b6->setDisabled(mVector[12].count == 0);
 
     ui->ak->setDisabled(true);
     ui->bk->setDisabled(true);
@@ -145,23 +137,30 @@ char
     MainWindow::_switchTurn(int pButtonId)
 {
     if (mVector[pButtonId].player == 'a')
-    {return 'b';}
-    else
-    {return 'a';}
+    {
+        return 'b';
+    }
+    if (mVector[pButtonId].player == 'b')
+    {
+        return 'a';
+    }
 }
 
 void
     MainWindow::_setTurn(char player)
 {
-    for (int i=0; i<=mVector.length();++i)
+    char* textLabel = "Player`s A turn";
+    
+    if (player == 'b')
     {
-        if (mVector[i].player==player)
-        {
-            mVector[i].isDisabled = false;
-        }else
-        {mVector[i].isDisabled = true;}
+        textLabel="Player`s B turn";
+    }
 
-        if (!mVector[i].count)
+    ui->label->setText(textLabel);
+
+    for (int i=0; i<=13;++i)
+    {
+        if (mVector[i].player!=player || mVector[i].count==0)
         {
             mVector[i].isDisabled = true;
         }
@@ -170,29 +169,28 @@ void
             mVector[i].isDisabled = false;
         }
     }
+    MainWindow::_update_btns();
 }
 
 void
     MainWindow::_btn_processing(int aIDBtn)
 {
-    char aturn = 'a';
-    int aSkip = 13,
+    static char aturn = 'a'; // player, who turns first
+
+    // init of players and enemy kalah cells
+    int aSkip  = 13,
         aKalah = 6;
 
-    MainWindow::_setTurn(aturn);
-    _update_btns();
-
-    int tmp = mVector[aIDBtn].count;
     if (mVector[aIDBtn].player=='b')
     {
         aSkip = 6;
         aKalah  = 13;
     }
+    // eof init
+
+    int tmp = mVector[aIDBtn].count;
     mVector[aIDBtn].count = 0;
-//    if(aIDBtn+1 <=  mVector.size())
-//    {mVector[aIDBtn + 1].count += tmp;}
-//    else
-//       { mVector[0].count += tmp;};
+
     int i=0;
     while (tmp>0)
     {
@@ -200,32 +198,41 @@ void
 
         if ((aIDBtn+i)==aSkip)
         {
-            ++i;
+           // ++i;
             continue;
         }
+
         if ((aIDBtn+i)==14)
         {
             i=-aIDBtn;
         }
-        mVector[aIDBtn+i].count+=1;
+
+        mVector[aIDBtn+i].count++;
         --tmp;
     }
+
     if(mVector[aIDBtn+i].player==mVector[aIDBtn].player)
     {
         if (mVector[aIDBtn+i].count==1 && mVector[12-(aIDBtn+i)].count>0)
         {
-            int tmpCount = mVector[12-(aIDBtn+i)].count+1;
+            int tmpCount = 1+mVector[12-(aIDBtn+i)].count;
             mVector[12-(aIDBtn+i)].count=0;
             mVector[aIDBtn+i].count=0;
             mVector[aKalah].count+=tmpCount;
-            aturn = MainWindow::_switchTurn(aIDBtn);
-
         }
-    }else{
+        aturn = MainWindow::_switchTurn(aIDBtn);
+
+    }
+    else if (aIDBtn+i==aKalah)
+    {
+        // do nothing
+    }
+    else
+    {
         aturn = MainWindow::_switchTurn(aIDBtn);
     }
 
-    _update_btns();
+    MainWindow::_setTurn(aturn);
 }
 
 
@@ -265,6 +272,7 @@ void MainWindow::on_actionNew_game_with_human_triggered()
 {
     _init_game();
     _update_btns();
+    MainWindow::_setTurn('a');
 }
 
 void MainWindow::on_b1_clicked()
