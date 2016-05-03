@@ -146,14 +146,50 @@ char
     }
 }
 
+bool
+    MainWindow::_checkEndGame(char player)
+    {
+        for (int i = 0; i < 14; ++i)
+        {
+            if (mVector[i].player == player && mVector[i].count!=0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+void
+    MainWindow::_setEndGame()
+{
+    int a = 0,
+        b = 0;
+    for (int i = 0; i < 14; ++i)
+    {
+        if (mVector[i].player == 'a')
+        {
+            a += mVector[i].count;
+            mVector[i].count=0;
+        }
+        if (mVector[i].player == 'b')
+        {
+            b += mVector[i].count;
+            mVector[i].count = 0;
+        }
+    }
+    mVector[6].count += a;
+    mVector[13].count += b;
+}
+
 void
     MainWindow::_setTurn(char player)
 {
-    char* textLabel = "Player`s A turn";
+    char* textLabel = "Хід гравця А";
     
     if (player == 'b')
     {
-        textLabel="Player`s B turn";
+        textLabel="Хід гравця Б";
     }
 
     ui->label->setText(textLabel);
@@ -198,7 +234,6 @@ void
 
         if ((aIDBtn+i)==aSkip)
         {
-           // ++i;
             continue;
         }
 
@@ -232,6 +267,13 @@ void
         aturn = MainWindow::_switchTurn(aIDBtn);
     }
 
+   // MainWindow::_setTurn(aturn);
+
+    if (MainWindow::_checkEndGame(aturn))
+    {
+        MainWindow::_setEndGame();
+        //exit(0);
+    }
     MainWindow::_setTurn(aturn);
 }
 
