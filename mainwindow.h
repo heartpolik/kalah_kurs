@@ -44,6 +44,8 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_actionHelp_triggered();
+
 private:
 
     void _init_game();

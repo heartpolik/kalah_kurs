@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QString>
 #include <QVBoxLayout>
+#include <QMessageBox>
+#include <string.h>
+//#include <unistd.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,7 +28,7 @@ void
 
     sData tmp;
 
-    tmp.count = 6;
+    tmp.count = 1;  //  !!!
     tmp.player = 'a';
 
     // btn a1
@@ -59,7 +62,7 @@ void
     mVector[6] = tmp;
 
     // btn b1
-    tmp.count = 6;
+    tmp.count = 1;  //!!!
     tmp.idBtn = 8;
     tmp.player = 'b';
     mVector[7] = tmp;
@@ -97,12 +100,11 @@ void
     MainWindow::_update_btns()
 {
     ui->a1->setText(QString::number(mVector[0].count));
-    ui->a2->setText(QString::number(mVector[1].count));
-    ui->a3->setText(QString::number(mVector[2].count));
-    ui->a4->setText(QString::number(mVector[3].count));
+    ui->a2->setText(QString::number(mVector[1].count));  
+    ui->a3->setText(QString::number(mVector[2].count)); 
+    ui->a4->setText(QString::number(mVector[3].count)); 
     ui->a5->setText(QString::number(mVector[4].count));
     ui->a6->setText(QString::number(mVector[5].count));
-
     ui->ak->setText(QString::number(mVector[6].count));
 
     ui->b1->setText(QString::number(mVector[7].count));
@@ -127,7 +129,6 @@ void
     ui->b4->setDisabled(mVector[10].isDisabled);
     ui->b5->setDisabled(mVector[11].isDisabled);
     ui->b6->setDisabled(mVector[12].isDisabled);
-
 
     ui->ak->setDisabled(true);
     ui->bk->setDisabled(true);
@@ -165,6 +166,7 @@ void
 {
     int a = 0,
         b = 0;
+    char message[255] = "  Гру закінчено,\nвиграв гравець А";
     for (int i = 0; i < 14; ++i)
     {
         if (mVector[i].player == 'a')
@@ -180,6 +182,17 @@ void
     }
     mVector[6].count += a;
     mVector[13].count += b;
+
+    if (mVector[6].count < mVector[13].count)
+    {
+        strcpy(message,"  Гру закінчено,\nвиграв гравець Б");
+    }
+    else if (mVector[6].count==mVector[13].count)
+    {
+        strcpy(message,"nope");
+    }
+
+    QMessageBox::warning(0,"Вітання!", message);
 }
 
 void
@@ -350,4 +363,9 @@ void MainWindow::on_b6_clicked()
 void MainWindow::on_actionExit_triggered()
 {
     exit(0);
+}
+
+void MainWindow::on_actionHelp_triggered()
+{
+    QMessageBox::information(0, "About", "Гра Калах v0.4 \n    by Polik");
 }
