@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <string.h>
-//#include <unistd.h>
+#include <QtTest/QTest>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +21,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+bool isTurn = true;
+
 void
     MainWindow::_init_game()
 {
@@ -28,7 +30,7 @@ void
 
     sData tmp;
 
-    tmp.count = 1;  //  !!!
+    tmp.count = 6;  //  !!!
     tmp.player = 'a';
 
     // btn a1
@@ -62,7 +64,7 @@ void
     mVector[6] = tmp;
 
     // btn b1
-    tmp.count = 1;  //!!!
+    tmp.count = 6;  //!!!
     tmp.idBtn = 8;
     tmp.player = 'b';
     mVector[7] = tmp;
@@ -93,16 +95,16 @@ void
     tmp.idBtn = 14;
     mVector[13] = tmp;
 
-    ui->label->setText("Start new game!");
+    ui->label->setText("F2 for new game!");
 }
 
 void
     MainWindow::_update_btns()
 {
     ui->a1->setText(QString::number(mVector[0].count));
-    ui->a2->setText(QString::number(mVector[1].count));  
-    ui->a3->setText(QString::number(mVector[2].count)); 
-    ui->a4->setText(QString::number(mVector[3].count)); 
+    ui->a2->setText(QString::number(mVector[1].count));
+    ui->a3->setText(QString::number(mVector[2].count));
+    ui->a4->setText(QString::number(mVector[3].count));
     ui->a5->setText(QString::number(mVector[4].count));
     ui->a6->setText(QString::number(mVector[5].count));
     ui->ak->setText(QString::number(mVector[6].count));
@@ -189,8 +191,9 @@ void
     }
     else if (mVector[6].count==mVector[13].count)
     {
-        strcpy(message,"nope");
+        strcpy(message,"Нічия!");
     }
+    ui->label->setText("F2 for new game!");
 
     QMessageBox::warning(0,"Вітання!", message);
 }
@@ -198,14 +201,15 @@ void
 void
     MainWindow::_setTurn(char player)
 {
-    char* textLabel = "Хід гравця А";
+    ui->label->setText("Хід гравця :");
+    char* textLabel = "А";
     
     if (player == 'b')
     {
-        textLabel="Хід гравця Б";
+        textLabel="Б";
     }
 
-    ui->label->setText(textLabel);
+    ui->count->setText(textLabel);
 
     for (int i=0; i<=13;++i)
     {
@@ -237,6 +241,8 @@ void
     }
     // eof init
 
+    isTurn = false; //lock buttons to push while processing
+
     int tmp = mVector[aIDBtn].count;
     mVector[aIDBtn].count = 0;
 
@@ -255,8 +261,15 @@ void
             i=-aIDBtn;
         }
 
+    --tmp;
+        ui->count->setText(QString::number(tmp));
         mVector[aIDBtn+i].count++;
-        --tmp;
+
+        MainWindow::_update_btns();
+        QTest::qWait(300);
+
+
+
     }
 
     if(mVector[aIDBtn+i].player==mVector[aIDBtn].player)
@@ -288,76 +301,90 @@ void
         //exit(0);
     }
     MainWindow::_setTurn(aturn);
+
+    isTurn = true;
 }
 
 
-
+// button slots (game field)
 void MainWindow::on_a1_clicked()
 {
+    if (isTurn)
     _btn_processing(0);
 }
 
 void MainWindow::on_a2_clicked()
 {
+    if (isTurn)
     _btn_processing(1);
 }
 
 void MainWindow::on_a3_clicked()
 {
+    if (isTurn)
     _btn_processing(2);
 }
 
 void MainWindow::on_a4_clicked()
 {
+    if (isTurn)
     _btn_processing(3);
 }
 
 void MainWindow::on_a5_clicked()
 {
+    if (isTurn)
     _btn_processing(4);
 }
 
 void MainWindow::on_a6_clicked()
 {
+    if (isTurn)
     _btn_processing(5);
-}
-
-
-void MainWindow::on_actionNew_game_with_human_triggered()
-{
-    _init_game();
-    _update_btns();
-    MainWindow::_setTurn('a');
 }
 
 void MainWindow::on_b1_clicked()
 {
+    if (isTurn)
     _btn_processing(7);
 }
 
 void MainWindow::on_b2_clicked()
 {
+    if (isTurn)
     _btn_processing(8);
 }
 
 void MainWindow::on_b3_clicked()
 {
+    if (isTurn)
     _btn_processing(9);
 }
 
 void MainWindow::on_b4_clicked()
 {
+    if (isTurn)
     _btn_processing(10);
 }
 
 void MainWindow::on_b5_clicked()
 {
+    if (isTurn)
     _btn_processing(11);
 }
 
 void MainWindow::on_b6_clicked()
 {
+    if (isTurn)
     _btn_processing(12);
+}
+
+//menu slots
+void MainWindow::on_actionNew_game_with_human_triggered()
+{
+    _init_game();
+    _update_btns();
+    MainWindow::_setTurn('a');
 }
 
 void MainWindow::on_actionExit_triggered()

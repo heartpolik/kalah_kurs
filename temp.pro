@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = temp
 TEMPLATE = app
-
+QT += testlib
 
 SOURCES += main.cpp\
         mainwindow.cpp

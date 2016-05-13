@@ -8,6 +8,13 @@ namespace Ui {
 class MainWindow;
 }
 
+/**
+* @brief sData is a container for store
+* info about each key (play field)
+* idBtn  - id of each button
+* count  - number of seeds in field
+* player - what player this field belongs to 
+*/
 struct sData
 {
     int idBtn;
@@ -22,6 +29,10 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+
+    /**
+     * @brief TEST DESCRIPTION
+     */
     ~MainWindow();
 
 private slots:
@@ -48,6 +59,9 @@ private slots:
 
 private:
 
+    /*
+     * @brief TEST DESCRIPTION
+     */
     void _init_game();
     void _update_btns();
 
