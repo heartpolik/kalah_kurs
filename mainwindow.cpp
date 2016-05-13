@@ -95,7 +95,7 @@ void
     tmp.idBtn = 14;
     mVector[13] = tmp;
 
-    ui->label->setText("F2 for new game!");
+    ui->label->setText("Натисніть F2!");
 }
 
 void
